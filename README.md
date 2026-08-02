@@ -22,7 +22,7 @@ Click the menu bar icon for details: plan name, exact usage numbers, and next re
 ## Build & Install
 
 ```sh
-git clone https://github.com/peach/QwenUsage.git
+git clone https://github.com/PeachGumi/QwenUsage.git
 cd QwenUsage
 xcodegen generate
 xcodebuild -project QwenUsage.xcodeproj -scheme QwenUsage -configuration Release build

@@ -1,0 +1,11 @@
+# Build artifacts
+build/
+DerivedData/
+*.xcodeproj/xcuserdata/
+*.xcodeproj/project.xcworkspace/xcuserdata/
+
+# Secrets — never commit session cookies
+saved_cookies.txt
+
+# macOS
+.DS_Store

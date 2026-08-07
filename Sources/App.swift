@@ -143,17 +143,25 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let remainPct5h = 100.0 - pct5h
         let remainPctWeek = 100.0 - pctWeek
 
-        // Color by remaining %: green > 50, yellow 20-50, red < 20
+        // Color by remaining %: green > 50, yellow 20-50, red < 20.
+        // Saturated palettes chosen for contrast against the menu bar in each appearance.
+        let dark = (statusItem.button?.effectiveAppearance ?? NSApp.effectiveAppearance)
+            .bestMatch(from: [.aqua, .darkAqua]) == .darkAqua
         func color(for remainPct: Double) -> NSColor {
-            if remainPct > 50 { return NSColor(red: 0.35, green: 0.75, blue: 0.45, alpha: 1.0) }
-            if remainPct > 20 { return NSColor(red: 0.85, green: 0.70, blue: 0.30, alpha: 1.0) }
-            return NSColor(red: 0.85, green: 0.35, blue: 0.30, alpha: 1.0)
+            if dark {
+                if remainPct > 50 { return NSColor(red: 0.40, green: 0.90, blue: 0.50, alpha: 1.0) }
+                if remainPct > 20 { return NSColor(red: 1.00, green: 0.80, blue: 0.30, alpha: 1.0) }
+                return NSColor(red: 1.00, green: 0.45, blue: 0.40, alpha: 1.0)
+            } else {
+                if remainPct > 50 { return NSColor(red: 0.05, green: 0.45, blue: 0.18, alpha: 1.0) }
+                if remainPct > 20 { return NSColor(red: 0.70, green: 0.42, blue: 0.00, alpha: 1.0) }
+                return NSColor(red: 0.75, green: 0.08, blue: 0.08, alpha: 1.0)
+            }
         }
 
-        // Render colored text into an NSImage (menu bar ignores foregroundColor on attributedTitle)
-        let font = NSFont.monospacedDigitSystemFont(ofSize: 12, weight: .medium)
+        let font = NSFont.monospacedDigitSystemFont(ofSize: 12, weight: .semibold)
         let labelFont = NSFont.monospacedDigitSystemFont(ofSize: 12, weight: .regular)
-        let textColor: NSColor = .black
+        let textColor: NSColor = dark ? .white : .black
 
         let parts: [(String, NSColor, NSFont)] = [
             ("Q ", textColor, labelFont),

@@ -162,9 +162,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let font = NSFont.monospacedDigitSystemFont(ofSize: 12, weight: .semibold)
         let labelFont = NSFont.monospacedDigitSystemFont(ofSize: 12, weight: .regular)
         let textColor: NSColor = dark ? .white : .black
+        // Brand hue distinguishes the two usage apps at a glance (Qwen = violet).
+        let brandColor: NSColor = dark ? NSColor(red: 0.72, green: 0.58, blue: 1.00, alpha: 1.0)
+                                       : NSColor(red: 0.38, green: 0.20, blue: 0.72, alpha: 1.0)
 
         let parts: [(String, NSColor, NSFont)] = [
-            ("Q ", textColor, labelFont),
+            ("Q ", brandColor, font),
             (String(format: "5h:%.0f%%", remainPct5h), color(for: remainPct5h), font),
             (" · ", textColor, labelFont),
             (String(format: "W:%.0f%%", remainPctWeek), color(for: remainPctWeek), font),

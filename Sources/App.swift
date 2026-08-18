@@ -50,6 +50,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         statusItem.button?.title = "Qwen --"
         statusItem.button?.toolTip = "Qwen Cloud Usage"
 
+        // The status bar image bakes in fixed colors chosen for the appearance
+        // at render time. When auto light/dark flips while the app is running,
+        // the cached image keeps the stale palette (e.g. dark-mode colors on a
+        // light menu bar) and stays illegible until the next poll or manual
+        // refresh. Re-render on every appearance change.
+        // There is no NSApplication appearance notification; KVO on
+        // effectiveAppearance is the documented observation point.
+        NSApp.addObserver(self, forKeyPath: "effectiveAppearance", options: [], context: nil)
+
         rebuildMenu()
         tryRestoreSession()
         startPolling()
@@ -239,6 +248,18 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     @objc private func refreshNow() {
         lastError = nil
         fetchUsage()
+    }
+
+    /// Light/dark (or accent) changed: re-render the status bar image with the
+    /// palette that matches the new appearance. No network fetch needed.
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?,
+                               change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
+        if object as? NSApplication === NSApp, keyPath == "effectiveAppearance" {
+            NSLog("[appearance] effectiveAppearance changed, re-rendering status bar")
+            DispatchQueue.main.async { [weak self] in self?.updateStatusBar() }
+        } else {
+            super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
+        }
     }
 
     private func fetchUsage() {
